@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}My Bookmarked Jobs | Alumni Portal{% endblock %}
+
+{% block css %}
+<style>
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
+    /* Modern Table Card */
+    .table-card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow-x: auto; /* Handles many columns on smaller screens */
+        border: 1px solid #e2e8f0;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+        min-width: 900px; /* Ensures table doesn't get too squished */
+    }
+
+    /* Consistent Black Header */
+    th {
+        background-color: #000000;
+        color: white;
+        font-weight: 600;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 18px 20px;
+    }
+
+    td {
+        padding: 18px 20px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+    }
+
+    tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .job-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .job-link:hover {
+        text-decoration: underline;
+    }
+
+    .employer-name {
+        font-weight: 500;
+        color: var(--text-light);
+        font-size: 0.85rem;
+    }
+
+    /* Action Button styling */
+    .btn-remove {
+        background: transparent;
+        color: var(--danger);
+        border: 1px solid var(--danger);
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .btn-remove:hover {
+        background: var(--danger);
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px;
+        color: var(--text-light);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>My Bookmarked Jobs</h2>
+    <p style="color: var(--text-light); margin-top: -10px;">A curated list of opportunities you're interested in.</p>
+</div>
+
+<div class="table-card">
+    <table>
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Employer</th>
+                <th>Location</th>
+                <th>Category</th>
+                <th>Skills</th>
+                <th>Salary Range</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for bookmark in bookmarks %}
+            <tr>
+                <td>
+                    <a href="{% url 'job_detail' bookmark.job.id %}" class="job-link">
+                        {{ bookmark.job.title }}
+                    </a>
+                </td>
+                <td class="employer-name">{{ bookmark.job.employer.full_name }}</td>
+                <td><small></small> {{ bookmark.job.location }}</td>
+                <td><span style="font-size: 0.85rem; color: var(--text-light);">{{ bookmark.job.category }}</span></td>
+                <td style="max-width: 200px; font-size: 0.8rem; color: var(--text-light);">
+                    {{ bookmark.job.skills_required|truncatechars:50 }}
+                </td>
+                <td style="font-weight: 600; font-size: 0.85rem;">
+                    {{ bookmark.job.salary_min }} - {{ bookmark.job.salary_max }}
+                </td>
+                <td>
+                    <form method="post" action="{% url 'toggle_bookmark' bookmark.job.id %}" style="box-shadow:none; padding:0; margin:0;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-remove">Remove</button>
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="empty-state">
+                    <p>Your bookmark list is currently empty.</p>
+                    <a href="{% url 'job_list' %}" style="color: var(--primary-color); font-weight: 600;">Explore Jobs &rarr;</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

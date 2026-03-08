@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}{{ profile_user.full_name }} | Profile{% endblock %}
+
+{% block css %}
+<style>
+    .profile-container {
+        animation: fadeIn 0.5s ease-in-out;
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* Header Profile Card */
+    .profile-header-card {
+        background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        padding: 40px;
+        border-radius: var(--radius) var(--radius) 0 0;
+        color: white;
+        text-align: center;
+        box-shadow: var(--shadow);
+    }
+
+    .profile-header-card h2 {
+        color: white;
+        margin: 0;
+        font-size: 2.2rem;
+        letter-spacing: -1px;
+    }
+
+    .profile-role-badge {
+        display: inline-block;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 5px 15px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-top: 10px;
+        backdrop-filter: blur(5px);
+        text-transform: capitalize;
+    }
+
+    /* Grid Layout for Info */
+    .profile-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .info-section {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid #edf2f7;
+    }
+
+    .info-section h3 {
+        font-size: 1.1rem;
+        color: var(--primary-color);
+        margin-top: 0;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .info-item {
+        margin-bottom: 15px;
+    }
+
+    .info-item label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-light);
+        text-transform: uppercase;
+        margin-bottom: 2px;
+    }
+
+    .info-item span {
+        font-size: 1rem;
+        color: var(--text-dark);
+        font-weight: 500;
+    }
+
+    /* Skills Tags */
+    .skills-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .skill-tag {
+        background: #f1f5f9;
+        color: var(--text-dark);
+        padding: 4px 12px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        border: 1px solid #e2e8f0;
+    }
+
+    /* Resume Button */
+    .resume-box {
+        grid-column: span 2;
+        text-align: center;
+        padding: 30px;
+    }
+
+    .btn-resume {
+        background: var(--text-dark);
+        color: white;
+        text-decoration: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: 0.3s;
+    }
+
+    .btn-resume:hover {
+        background: #000;
+        transform: translateY(-2px);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+        .profile-grid { grid-template-columns: 1fr; }
+        .resume-box { grid-column: span 1; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-header-card">
+        <h2>{{ profile_user.full_name }}</h2>
+        <span class="profile-role-badge">{{ profile_user.role }}</span>
+    </div>
+
+    <div class="profile-grid">
+        <div class="info-section">
+            <h3>👤 Personal Details</h3>
+            <div class="info-item">
+                <label>Username</label>
+                <span>{{ profile_user.username }}</span>
+            </div>
+            <div class="info-item">
+                <label>Email Address</label>
+                <span>{{ profile_user.email }}</span>
+            </div>
+            <div class="info-item">
+                <label>Age / Gender</label>
+                <span>{{ profile_user.age }} Years • {{ profile_user.gender|capfirst }}</span>
+            </div>
+            <div class="info-item">
+                <label>Location</label>
+                <span>{{ profile_user.city }}, {{ profile_user.country }}</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>💼 Professional Info</h3>
+            <div class="info-item">
+                <label>Education</label>
+                <span>{{ profile_user.education|default:"Not specified" }}</span>
+            </div>
+            <div class="info-item">
+                <label>Experience</label>
+                <span>{{ profile_user.experience|default:"No experience listed" }}</span>
+            </div>
+            <div class="info-item">
+                <label>Skills</label>
+                <div class="skills-container">
+                    {# Assuming skills are comma-separated #}
+                    {{ profile_user.skills }}
+                </div>
+            </div>
+        </div>
+
+        <div class="info-section" style="grid-column: span 2;">
+            <h3>📞 Contact Information</h3>
+            <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px;">
+                <div class="info-item">
+                    <label>Phone</label>
+                    <span>{{ profile_user.phone }}</span>
+                </div>
+                <div class="info-item">
+                    <label>Secondary Contact</label>
+                    <span>{{ profile_user.contact_number }}</span>
+                </div>
+            </div>
+        </div>
+
+        {% if profile_user.resume %}
+        <div class="info-section resume-box">
+            <a href="{{ profile_user.resume.url }}" target="_blank" class="btn-resume">
+                📄 Download Professional Resume
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="text-center mt-4" style="margin-bottom: 40px;">
+        <a href="javascript:history.back()" style="color: var(--text-light); text-decoration: none; font-size: 0.9rem;">
+            ← Go Back
+        </a>
+    </div>
+</div>
+{% endblock %}

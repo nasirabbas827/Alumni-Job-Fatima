@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Post New Job | Alumni Network{% endblock %}
+
+{% block css %}
+<style>
+    /* Content Animation */
+    .post-job-container {
+        animation: slideUp 0.4s ease-out;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 2.5rem;
+    }
+
+    .page-header p {
+        color: var(--text-light);
+        font-size: 1rem;
+        margin-top: -10px;
+    }
+
+    /* Form Layout Enhancements */
+    .job-form {
+        display: grid;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    /* Modernizing Inputs */
+    form input, form textarea, form select {
+        border: 1.5px solid #e2e8f0 !important;
+        background-color: #ffffff;
+        padding: 14px 18px !important;
+        font-size: 0.95rem !important;
+        transition: all 0.2s ease !important;
+        margin-bottom: 0 !important; /* Resetting old margin */
+    }
+
+    form input:focus, form textarea:focus, form select:focus {
+        border-color: var(--primary-color) !important;
+        box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1) !important;
+        outline: none;
+    }
+
+    /* Styling help text and errors */
+    .help-text {
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-top: 4px;
+    }
+
+    .error-text {
+        font-size: 0.8rem;
+        color: var(--danger);
+        font-weight: 500;
+    }
+
+    /* Action Button */
+    .submit-btn {
+        background: var(--primary-color);
+        color: white;
+        padding: 16px;
+        border: none;
+        border-radius: var(--radius);
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+        margin-top: 1rem;
+    }
+
+    .submit-btn:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(67, 97, 238, 0.25);
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="post-job-container">
+    <div class="page-header">
+        <h2>Post New Job</h2>
+        <p>Fill in the details below to reach out to potential candidates.</p>
+    </div>
+
+    <form method="POST" class="job-form">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="form-group">
+                <label>{{ field.label }}</label>
+                {{ field }}
+                
+                {% if field.help_text %}
+                    <span class="help-text">{{ field.help_text }}</span>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <span class="error-text">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="submit-btn">Publish Job Opening</button>
+        
+        <div class="text-center mt-4">
+            <a href="{% url 'my_jobs' %}" style="text-decoration: none; color: var(--text-light); font-size: 0.9rem; font-weight: 500;">
+                Cancel and return to My Jobs
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

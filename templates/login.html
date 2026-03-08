@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}Login | Alumni Network{% endblock %}
+
+{% block css %}
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 80px 0;
+        animation: fadeIn 0.4s ease-out;
+    }
+
+    .login-card {
+        background: var(--card-bg);
+        padding: 50px 40px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 450px;
+        border: 1px solid #edf2f7;
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 35px;
+    }
+
+    .login-header h2 {
+        font-size: 1.8rem;
+        color: var(--text-dark);
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
+
+    .login-header p {
+        color: var(--text-light);
+        font-size: 0.95rem;
+    }
+
+    .form-group {
+        margin-bottom: 22px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .form-group label {
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Input Styling to match the rest of the site */
+    form input {
+        border: 1.5px solid #e2e8f0 !important;
+        background-color: #fcfdfe;
+        padding: 14px 16px !important;
+        border-radius: 8px !important;
+        font-size: 0.95rem !important;
+        transition: all 0.2s ease !important;
+    }
+
+    form input:focus {
+        border-color: var(--primary-color) !important;
+        background-color: #fff;
+        box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.1) !important;
+        outline: none;
+    }
+
+    .btn-login {
+        background: var(--primary-color);
+        color: white;
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+        box-shadow: 0 4px 12px rgba(67, 97, 238, 0.15);
+    }
+
+    .btn-login:hover {
+        background: var(--secondary-color);
+        transform: translateY(-1px);
+        box-shadow: 0 6px 15px rgba(67, 97, 238, 0.25);
+    }
+
+    .error-list {
+        color: var(--danger);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 8px;
+        list-style: none;
+        padding: 0;
+    }
+
+    .auth-footer {
+        margin-top: 30px;
+        text-align: center;
+        border-top: 1px solid #f1f5f9;
+        padding-top: 25px;
+    }
+
+    .auth-footer p {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 12px;
+    }
+
+    .auth-footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 700;
+        transition: 0.2s;
+    }
+
+    .auth-footer a:hover {
+        text-decoration: underline;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(15px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>Welcome Back</h2>
+            <p>Access your professional network</p>
+        </div>
+
+        <form method="post" style="box-shadow: none; padding: 0; max-width: 100%;">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="form-group">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    
+                    {% if field.errors %}
+                        <ul class="error-list">
+                            {% for error in field.errors %}
+                                <li>✕ {{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-login">Sign In</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>
+                New here? <a href="{% url 'register' %}">Create an account</a>
+            </p>
+            <p style="margin-bottom: 0;">
+                <a href="{% url 'password_reset_request' %}" style="font-weight: 500; font-size: 0.85rem; color: #64748b;">
+                    Forgot your password?
+                </a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

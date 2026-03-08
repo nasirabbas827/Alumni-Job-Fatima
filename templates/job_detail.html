@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} | Job Details{% endblock %}
+
+{% block css %}
+<style>
+    .detail-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 30px;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Main Content Area */
+    .job-main {
+        background: var(--card-bg);
+        padding: 40px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid #edf2f7;
+    }
+
+    .job-header {
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 20px;
+        margin-bottom: 30px;
+    }
+
+    .job-header h2 {
+        margin: 0;
+        font-size: 2rem;
+        color: var(--text-dark);
+    }
+
+    .job-tags {
+        display: flex;
+        gap: 15px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+
+    .tag {
+        background: #f1f5f9;
+        color: var(--text-light);
+        padding: 6px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .description-box {
+        line-height: 1.8;
+        color: #4a5568;
+        white-space: pre-line; /* Preserves formatting of the description */
+    }
+
+    /* Sidebar Area */
+    .job-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .sidebar-card {
+        background: var(--card-bg);
+        padding: 25px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        border: 1px solid #edf2f7;
+    }
+
+    .sidebar-card h4 {
+        margin-top: 0;
+        margin-bottom: 15px;
+        font-size: 1rem;
+        color: var(--text-dark);
+    }
+
+    /* Action Buttons */
+    .btn-apply {
+        background: var(--primary-color);
+        color: white;
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+    }
+
+    .btn-apply:hover:not(:disabled) {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+    }
+
+    .btn-apply:disabled {
+        background: #cbd5e1;
+        cursor: not-allowed;
+    }
+
+    .btn-bookmark {
+        background: white;
+        color: var(--text-dark);
+        border: 1.5px solid #e2e8f0;
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-bookmark:hover {
+        background: #f8fafc;
+        border-color: var(--primary-color);
+        color: var(--primary-color);
+    }
+
+    .bookmark-active {
+        background: #fff1f2;
+        color: var(--danger);
+        border-color: var(--danger);
+    }
+
+    /* File Input Styling */
+    .file-input-wrapper {
+        margin-top: 10px;
+    }
+
+    .file-input-wrapper label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-light);
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 992px) {
+        .detail-container { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    
+    <main class="job-main">
+        <div class="job-header">
+            <h2>{{ job.title }}</h2>
+            <div class="job-tags">
+                <span class="tag">📍 {{ job.location }}</span>
+                <span class="tag">📁 {{ job.category }}</span>
+                <span class="tag">💰 {{ job.salary_min }} - {{ job.salary_max }}</span>
+            </div>
+        </div>
+
+        <h3>Job Description</h3>
+        <div class="description-box">
+            {{ job.description }}
+        </div>
+
+        <h3 style="margin-top: 30px;">Required Skills</h3>
+        <p style="color: var(--text-dark); font-weight: 500;">{{ job.skills_required }}</p>
+    </main>
+
+    <aside class="job-sidebar">
+        
+        {% if request.session.username %}
+            <div class="sidebar-card">
+                <h4>Application</h4>
+                
+                {% if can_apply %}
+                    {% if has_applied %}
+                        <button class="btn-apply" disabled>Already Applied ✅</button>
+                    {% else %}
+                        <form method="post" enctype="multipart/form-data" action="{% url 'apply_job' job.id %}" style="box-shadow:none; padding:0;">
+                            {% csrf_token %}
+                            <div class="file-input-wrapper">
+                                <label>Upload Resume (PDF/Doc)</label>
+                                <input type="file" name="resume" required style="width: 100%; font-size: 0.8rem;">
+                            </div>
+                            <button type="submit" class="btn-apply">Submit Application</button>
+                        </form>
+                    {% endif %}
+                {% else %}
+                    <p style="font-size: 0.85rem; color: var(--text-light);">This job is no longer accepting applications.</p>
+                {% endif %}
+
+                <form method="post" action="{% url 'toggle_bookmark' job.id %}" style="box-shadow:none; padding:0; margin-top: 15px;">
+                    {% csrf_token %}
+                    {% if is_bookmarked %}
+                        <button type="submit" class="btn-bookmark bookmark-active">
+                            ❤️ Remove Bookmark
+                        </button>
+                    {% else %}
+                        <button type="submit" class="btn-bookmark">
+                            🤍 Bookmark for Later
+                        </button>
+                    {% endif %}
+                </form>
+            </div>
+        {% else %}
+            <div class="sidebar-card text-center">
+                <p>Please <a href="{% url 'login' %}" style="color: var(--primary-color);">Login</a> to apply for this job.</p>
+            </div>
+        {% endif %}
+
+        <div class="sidebar-card">
+            <h4>About the Employer</h4>
+            <p style="font-size: 0.9rem; color: var(--text-light);">
+                Posted by <strong>{{ job.employer.username }}</strong>
+            </p>
+            <a href="{% url 'job_list' %}" style="font-size: 0.85rem; text-decoration: none; color: var(--primary-color);">
+                View more jobs by this employer &rarr;
+            </a>
+        </div>
+    </aside>
+
+</div>
+{% endblock %}

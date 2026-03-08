@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Alumni Network | Connect. Hire. Grow.{% endblock %}
+
+{% block css %}
+<style>
+    /* Section 1: Hero */
+    .hero-v2 {
+        padding: 100px 0;
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        align-items: center;
+        gap: 40px;
+    }
+    .hero-v2 h1 { font-size: 3.8rem; line-height: 1.1; margin-bottom: 25px; }
+    .hero-v2 p { font-size: 1.25rem; color: var(--text-light); margin-bottom: 30px; }
+
+    /* Section 2: Trust/Partners Bar */
+    .partners-section { padding: 40px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; text-align: center; }
+    .partners-list { display: flex; justify-content: space-around; filter: grayscale(1); opacity: 0.6; flex-wrap: wrap; gap: 20px; }
+    
+    /* Section 3: Features (Icon Grid) */
+    .features-section { padding: 80px 0; background: #fcfdfe; }
+    .section-title { text-align: center; margin-bottom: 50px; }
+    .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+    .feature-item { background: white; padding: 30px; border-radius: 15px; border: 1px solid #eee; }
+
+    /* Section 4: Numbers/Counter */
+    .counter-section { padding: 60px 0; background: var(--text-dark); color: white; display: flex; justify-content: space-around; text-align: center; }
+    .counter-item h2 { font-size: 3rem; margin: 0; color: var(--primary-color); }
+
+    /* Section 5: The "Dual-Path" (Alumni vs Employer) */
+    .path-section { padding: 80px 0; display: flex; gap: 30px; }
+    .path-card { flex: 1; padding: 50px; border-radius: 20px; color: white; }
+
+    /* Section 6: Testimonials */
+    .testimonial-section { padding: 80px 0; text-align: center; background: #fff; }
+    .testimonial-box { max-width: 800px; margin: 0 auto; font-style: italic; font-size: 1.2rem; }
+
+    /* Section 7: Recent Jobs (Preview) */
+    .jobs-preview { padding: 80px 0; }
+    .job-strip { display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #eee; align-items: center; }
+
+    /* Section 8: Final CTA Footer */
+    .final-cta { padding: 100px 0; text-align: center; background: linear-gradient(135deg, var(--primary-color), #7209b7); color: white; border-radius: 30px; margin-bottom: 40px; }
+
+    @media (max-width: 768px) {
+        .hero-v2, .feature-grid, .path-section, .counter-section { grid-template-columns: 1fr; flex-direction: column; text-align: center; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<section class="hero-v2">
+    <div>
+        <h1>Unlock the Power of Your Alumni Network</h1>
+        <p>The exclusive platform for students to find opportunities and for alumni to give back through hiring.</p>
+        <div style="display: flex; gap: 15px;">
+            <a href="{% url 'register' %}" class="btn-primary" style="padding: 15px 30px; text-decoration: none;">Join Network</a>
+            <a href="#features" class="btn-secondary" style="padding: 15px 30px; text-decoration: none; border: 1px solid #ccc;">Learn More</a>
+        </div>
+    </div>
+    <div class="hero-image">
+        <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=500&q=80" style="border-radius: 20px; width: 100%;" alt="Team">
+    </div>
+</section>
+
+<section class="partners-section">
+    <p style="font-size: 0.8rem; font-weight: bold; margin-bottom: 20px; text-transform: uppercase; color: #999;">Trusted by Top Employers</p>
+    <div class="partners-list">
+        <strong>TECH CORPS</strong> <strong>VU SOLUTIONS</strong> <strong>GLOBAL DEV</strong> <strong>INNO-WORKS</strong>
+    </div>
+</section>
+
+<section class="features-section" id="features">
+    <div class="section-title">
+        <h2>Built for Your Success</h2>
+    </div>
+    <div class="feature-grid">
+        <div class="feature-item">
+            <div style="font-size: 2rem;">⚡</div>
+            <h3>Fast Applications</h3>
+            <p>Apply to exclusive roles with your pre-built profile in just one click.</p>
+        </div>
+        <div class="feature-item">
+            <div style="font-size: 2rem;">🛡️</div>
+            <h3>Verified Talent</h3>
+            <p>Every member is a verified student or alumni from our institution.</p>
+        </div>
+        <div class="feature-item">
+            <div style="font-size: 2rem;">📊</div>
+            <h3>Match Tracking</h3>
+            <p>See exactly how well your skills match a job description before applying.</p>
+        </div>
+    </div>
+</section>
+
+<section class="counter-section">
+    <div class="counter-item"><h2>2,500+</h2><p>Alumni</p></div>
+    <div class="counter-item"><h2>850+</h2><p>Jobs Posted</p></div>
+    <div class="counter-item"><h2>120+</h2><p>Companies</p></div>
+</section>
+
+<section class="path-section">
+    <div class="path-card" style="background: #4361ee;">
+        <h3>Looking for Work?</h3>
+        <p>Browse internships and full-time positions posted by your fellow alumni.</p>
+        <a href="{% url 'job_list' %}" style="color: white; font-weight: bold; text-decoration: none;">Browse Jobs &rarr;</a>
+    </div>
+    <div class="path-card" style="background: #1e293b;">
+        <h3>Hiring Talent?</h3>
+        <p>Post job openings and reach fresh talent specifically from your alma mater.</p>
+        <a href="{% url 'create_job' %}" style="color: white; font-weight: bold; text-decoration: none;">Post a Job &rarr;</a>
+    </div>
+</section>
+
+<section class="testimonial-section">
+    <div class="testimonial-box">
+        <p>"This platform helped me find my first internship through a senior who graduated 2 years before me. It's more than a job board; it's a community."</p>
+        <p style="font-style: normal; font-weight: bold; margin-top: 20px; color: var(--primary-color);">— Nasir Abbas, Full Stack Developer</p>
+    </div>
+</section>
+
+<section class="jobs-preview">
+    <div class="section-title"><h2>Recent Openings</h2></div>
+    <div class="job-strip">
+        <span><strong>Frontend Engineer</strong> • Lahore, PK</span>
+        <a href="{% url 'job_list' %}" style="color: var(--primary-color); text-decoration: none;">View &rarr;</a>
+    </div>
+    <div class="job-strip">
+        <span><strong>Python Intern</strong> • Remote</span>
+        <a href="{% url 'job_list' %}" style="color: var(--primary-color); text-decoration: none;">View &rarr;</a>
+    </div>
+</section>
+
+<section class="final-cta">
+    <h2 style="color: white; font-size: 2.5rem; margin-bottom: 20px;">Ready to start your journey?</h2>
+    <p style="margin-bottom: 30px;">Join thousands of others building their future today.</p>
+    <a href="{% url 'register' %}" style="background: white; color: var(--primary-color); padding: 18px 45px; border-radius: 50px; text-decoration: none; font-weight: bold; font-size: 1.1rem;">Create Your Free Account</a>
+</section>
+
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Employer Dashboard | Alumni Network{% endblock %}
+
+{% block css %}
+<style>
+    .dashboard-container {
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    /* Hero Section with Professional Gradient */
+    .dashboard-hero {
+        background: linear-gradient(135deg, #1e293b, #334155); /* Darker professional tone for employers */
+        color: white;
+        padding: 50px 40px;
+        border-radius: var(--radius);
+        margin-bottom: 40px;
+        box-shadow: var(--shadow);
+    }
+
+    .dashboard-hero h1 {
+        margin: 0;
+        font-size: 2.2rem;
+        color: white;
+    }
+
+    .dashboard-hero p {
+        opacity: 0.9;
+        margin-top: 10px;
+        font-size: 1.1rem;
+    }
+
+    /* Management Grid */
+    .action-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+    }
+
+    .action-card {
+        background: var(--card-bg);
+        padding: 35px 25px;
+        border-radius: var(--radius);
+        border: 1px solid #edf2f7;
+        text-align: center;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .action-card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--shadow);
+        border-color: var(--primary-color);
+    }
+
+    .action-card .icon {
+        font-size: 2.5rem;
+        background: #f8fafc;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px; /* Slightly more square/professional for employers */
+        margin-bottom: 5px;
+        border: 1px solid #f1f5f9;
+    }
+
+    .action-card h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        color: var(--text-dark);
+    }
+
+    .action-card p {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    
+    <div class="dashboard-hero">
+        <h1>Welcome, {{ username }}!</h1>
+        <p>Manage your recruitment pipeline and discover top alumni talent from the network.</p>
+    </div>
+
+    <div class="action-grid">
+        <a href="{% url 'create_job' %}" class="action-card">
+            <div class="icon">➕</div>
+            <h3>Post a New Job</h3>
+            <p>Create a job listing to reach qualified alumni candidates.</p>
+        </a>
+
+        <a href="{% url 'my_jobs' %}" class="action-card">
+            <div class="icon">💼</div>
+            <h3>Manage Jobs</h3>
+            <p>Edit your active listings and track application counts.</p>
+        </a>
+
+        <a href="{% url 'my_job_applications' %}" class="action-card">
+            <div class="icon">👥</div>
+            <h3>Review Applicants</h3>
+            <p>View resumes and update candidate statuses for your postings.</p>
+        </a>
+
+        <a href="{% url 'update_profile' %}" class="action-card">
+            <div class="icon">🏢</div>
+            <h3>Company Profile</h3>
+            <p>Update your organization's details and contact information.</p>
+        </a>
+    </div>
+
+</div>
+{% endblock %}

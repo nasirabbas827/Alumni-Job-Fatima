@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+
+{% block title %}My Job Applications | Alumni Portal{% endblock %}
+
+{% block css %}
+<style>
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
+    /* Modern Table Card */
+    .table-card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        border: 1px solid #e2e8f0;
+        animation: fadeIn 0.4s ease-in-out;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        text-align: left;
+    }
+
+    /* Black Header as requested previously */
+    th {
+        background-color: #000000;
+        color: white;
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        padding: 18px 24px;
+    }
+
+    td {
+        padding: 18px 24px;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+        font-size: 0.95rem;
+        color: var(--text-dark);
+    }
+
+    tr:hover {
+        background-color: #f8fafc;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+    
+    .status-pending { background: #fef9c3; color: #854d0e; }
+    .status-shortlisted { background: #e0f2fe; color: #0369a1; }
+    .status-rejected { background: #fee2e2; color: #991b1b; }
+    .status-hired { background: #dcfce7; color: #166534; }
+
+    .resume-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .resume-link:hover {
+        text-decoration: underline;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px;
+        color: var(--text-light);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>My Job Applications</h2>
+    <p style="color: var(--text-light); margin-top: -10px;">Track the status of your submitted applications.</p>
+</div>
+
+<div class="table-card">
+    <table>
+        <thead>
+            <tr>
+                <th>Job Title</th>
+                <th>Status</th>
+                <th>Applied At</th>
+                <th>Resume</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td style="font-weight: 600;">{{ app.job.title }}</td>
+                <td>
+                    <span class="status-badge status-{{ app.status|lower }}">
+                        {{ app.status }}
+                    </span>
+                </td>
+                <td style="color: var(--text-light); font-size: 0.85rem;">
+                    {{ app.applied_at|date:"M d, Y" }}
+                </td>
+                <td>
+                    <a href="{{ app.resume.url }}" target="_blank" class="resume-link">
+                        📄 View Resume
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="empty-state">
+                    <p>You haven't applied for any jobs yet.</p>
+                    <a href="{% url 'job_list' %}" style="color: var(--primary-color); font-weight: 600;">Browse jobs &rarr;</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

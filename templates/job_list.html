@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Opportunities | Alumni Network{% endblock %}
+
+{% block css %}
+<style>
+    /* Search Bar Modernization */
+    .search-section {
+        background: var(--card-bg);
+        padding: 30px;
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        margin-bottom: 40px;
+        border: 1px solid #edf2f7;
+    }
+
+    .search-form {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr auto;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .search-form input {
+        margin-bottom: 0 !important;
+        padding: 12px 15px !important;
+        border: 1px solid #e2e8f0 !important;
+        background: #f8fafc !important;
+    }
+
+    .btn-search {
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .btn-search:hover {
+        background: var(--secondary-color);
+        transform: translateY(-1px);
+    }
+
+    /* Job Grid Styling */
+    .job-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        padding: 0;
+        list-style: none;
+    }
+
+    .job-card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 25px;
+        border: 1px solid #eef2f6;
+        transition: all 0.3s ease;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .job-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.08);
+        border-color: var(--primary-color);
+    }
+
+    .job-card h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.2rem;
+        color: var(--text-dark);
+    }
+
+    .job-meta {
+        color: var(--text-light);
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* Match Score Badge */
+    .match-badge {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #e0f2fe;
+        color: #0369a1;
+        padding: 4px 10px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        border: 1px solid #bae6fd;
+    }
+
+    .view-btn {
+        text-decoration: none;
+        color: var(--primary-color);
+        font-weight: 600;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        margin-top: 15px;
+    }
+
+    .view-btn:hover {
+        text-decoration: underline;
+    }
+
+    .empty-results {
+        text-align: center;
+        grid-column: 1 / -1;
+        padding: 50px;
+        color: var(--text-light);
+    }
+
+    @media (max-width: 992px) {
+        .search-form {
+            grid-template-columns: 1fr 1fr;
+        }
+        .btn-search {
+            grid-column: span 2;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .search-form {
+            grid-template-columns: 1fr;
+        }
+        .btn-search {
+            grid-column: span 1;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Explore Job Opportunities</h2>
+</div>
+
+<div class="search-section">
+    <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="Job title or skills..." value="{{ query }}">
+        <input type="text" name="location" placeholder="City or Remote" value="{{ location }}">
+        <input type="text" name="category" placeholder="Industry/Category" value="{{ category }}">
+        <button type="submit" class="btn-search">Search Jobs</button>
+    </form>
+</div>
+
+<ul class="job-grid">
+    {% for job in jobs %}
+        <li class="job-card">
+            {% if job.skill_match %}
+                <span class="match-badge">⭐ {{ job.skill_match }}% Match</span>
+            {% endif %}
+            
+            <div>
+                <h3>{{ job.title }}</h3>
+                <div class="job-meta">
+                    <span> {{ job.location }}</span>
+                    <span>•</span>
+                    <span> {{ job.employer.username|default:"Alumni Partner" }}</span>
+                </div>
+            </div>
+
+            <a href="{% url 'job_detail' job.id %}" class="view-btn">
+                View Details <span>&rarr;</span>
+            </a>
+        </li>
+    {% empty %}
+        <div class="empty-results">
+            <p style="font-size: 1.2rem;">No jobs found matching your criteria.</p>
+            <a href="{% url 'job_list' %}" style="color: var(--primary-color);">Clear filters and try again</a>
+        </div>
+    {% endfor %}
+</ul>
+{% endblock %}
